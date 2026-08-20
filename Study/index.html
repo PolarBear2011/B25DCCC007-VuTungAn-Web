@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng Ký Khóa Học</title>
+</head>
+<body>
+
+    <h1>ĐĂNG KÝ KHÓA HỌC</h1>
+
+    <form action="#" method="POST">
+        <label for="fullname">Họ và tên:</label><br>
+        <input type="text" id="fullname" name="fullname" required><br><br>
+
+        <label for="student_id">Mã sinh viên:</label><br>
+        <input type="text" id="student_id" name="student_id" required><br><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="phone">Số điện thoại:</label><br>
+        <input type="tel" id="phone" name="phone" required><br><br>
+
+        <label for="dob">Ngày sinh:</label><br>
+        <input type="date" id="dob" name="dob" required><br><br>
+
+        <label for="course">Khóa học:</label><br>
+        <select id="course" name="course" required>
+            <option value="">-- Chọn khóa học --</option>
+            <option value="web">Lập trình Web</option>
+            <option value="python">Lập trình Python</option>
+            <option value="sql">Cơ sở dữ liệu SQL</option>
+        </select><br><br>
+
+        <label>Hình thức học:</label><br>
+        <input type="radio" id="online" name="learning_mode" value="online" required>
+        <label for="online">Online</label>
+        <input type="radio" id="offline" name="learning_mode" value="offline">
+        <label for="offline">Offline</label><br><br>
+
+        <label>Kỹ năng hiện tại:</label><br>
+        <input type="checkbox" id="basic" name="skills" value="basic">
+        <label for="basic">Cơ bản</label>
+        <input type="checkbox" id="intermediate" name="skills" value="intermediate">
+        <label for="intermediate">Trung bình</label>
+        <input type="checkbox" id="advanced" name="skills" value="advanced">
+        <label for="advanced">Nâng cao</label><br><br>
+
+        <label for="goal">Mục tiêu học tập:</label><br>
+        <textarea id="goal" name="goal" rows="4" cols="40"></textarea><br><br>
+
+        <label for="note">Ghi chú:</label><br>
+        <textarea id="note" name="note" rows="3" cols="40"></textarea><br><br>
+
+        <input type="submit" value="Đăng ký ngay">
+        <input type="reset" value="Nhập lại">
+    </form>
+
+</body>
+</html>
