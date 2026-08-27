@@ -2,59 +2,78 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Đăng Ký Khóa Học</title>
 </head>
 <body>
+/* Thiết lập cơ bản */
+* {
+  box-sizing: border-box;
+}
 
-    <h1>ĐĂNG KÝ KHÓA HỌC</h1>
+.product-list {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
 
-    <form action="#" method="POST">
-        <label for="fullname">Họ và tên:</label><br>
-        <input type="text" id="fullname" name="fullname" required><br><br>
+/* Yêu cầu 1, 2, 3: Width cố định, Flexbox dọc, Padding & Border-radius */
+.product-card {
+  width: 250px;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  
+  /* Căn chỉnh các phần tử theo chiều dọc */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  /* Thiết lập vị trí để làm mỏ neo cho nhãn "MỚI" (::before) */
+  position: relative;
+  
+  /* Hiệu ứng chuyển cảnh mượt mà khi hover */
+  transition: all 0.3s ease;
+  background-color: #ffffff;
+}
 
-        <label for="student_id">Mã sinh viên:</label><br>
-        <input type="text" id="student_id" name="student_id" required><br><br>
+/* Yêu cầu 4: Font-weight tên sản phẩm & Màu sắc giá */
+.product-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 0;
+  color: #1e293b;
+}
 
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
+.product-price {
+  color: #e11d48; /* Màu đỏ nổi bật khác với màu tên */
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
 
-        <label for="phone">Số điện thoại:</label><br>
-        <input type="tel" id="phone" name="phone" required><br><br>
+/* Yêu cầu 5: Hiệu ứng khi :hover vào card */
+.product-card:hover {
+  border-color: #3b82f6; /* Đổi màu border sang xanh */
+  transform: translateY(-4px); /* Nhấc nhẹ card lên */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ nhẹ */
+}
 
-        <label for="dob">Ngày sinh:</label><br>
-        <input type="date" id="dob" name="dob" required><br><br>
+/* Yêu cầu 6: Tạo nhãn "MỚI" bằng ::before mà không chỉnh sửa HTML */
+.product-card::before {
+  content: "MỚI";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ef4444;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
 
-        <label for="course">Khóa học:</label><br>
-        <select id="course" name="course" required>
-            <option value="">-- Chọn khóa học --</option>
-            <option value="web">Lập trình Web</option>
-            <option value="python">Lập trình Python</option>
-            <option value="sql">Cơ sở dữ liệu SQL</option>
-        </select><br><br>
-
-        <label>Hình thức học:</label><br>
-        <input type="radio" id="online" name="learning_mode" value="online" required>
-        <label for="online">Online</label>
-        <input type="radio" id="offline" name="learning_mode" value="offline">
-        <label for="offline">Offline</label><br><br>
-
-        <label>Kỹ năng hiện tại:</label><br>
-        <input type="checkbox" id="basic" name="skills" value="basic">
-        <label for="basic">Cơ bản</label>
-        <input type="checkbox" id="intermediate" name="skills" value="intermediate">
-        <label for="intermediate">Trung bình</label>
-        <input type="checkbox" id="advanced" name="skills" value="advanced">
-        <label for="advanced">Nâng cao</label><br><br>
-
-        <label for="goal">Mục tiêu học tập:</label><br>
-        <textarea id="goal" name="goal" rows="4" cols="40"></textarea><br><br>
-
-        <label for="note">Ghi chú:</label><br>
-        <textarea id="note" name="note" rows="3" cols="40"></textarea><br><br>
-
-        <input type="submit" value="Đăng ký ngay">
-        <input type="reset" value="Nhập lại">
-    </form>
-
+/* Yêu cầu 7: Dùng :nth-child để tạo hiệu ứng so le màu nền */
+.product-card:nth-child(even) {
+  background-color: #f8fafc; /* Đổi màu nền cho các card vị trí chẵn (2, 4, 6,...) */
+}
 </body>
 </html>
