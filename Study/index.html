@@ -1,120 +1,692 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Danh sách sản phẩm</title>
-  <style>
-    /* Thiết lập cơ bản */
-    * {
-      box-sizing: border-box;
-      font-family: 'Times New Roman', Times, serif; /* Font chữ có chân giống hệt ảnh mẫu */
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Minh Khoa — Blueprint of Me</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    box-sizing:border-box;
+    --bg:#EFF3F8;
+    --bg-panel:#E4EBF3;
+    --ink:#152230;
+    --ink-soft:#51636F;
+    --accent:#2A62E0;
+    --accent-warm:#E8622C;
+    --line:rgba(21,34,48,0.16);
+    --line-strong:rgba(21,34,48,0.32);
+    --card-bg:#F8FAFD;
+    --shadow-hover: 0 18px 30px -18px rgba(21,34,48,0.35);
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --bg:#0B1620;
+      --bg-panel:#0F1E2A;
+      --ink:#E9F0F6;
+      --ink-soft:#93A8B7;
+      --accent:#6FA0FF;
+      --accent-warm:#FF9463;
+      --line:rgba(233,240,246,0.14);
+      --line-strong:rgba(233,240,246,0.28);
+      --card-bg:#0F202C;
+      --shadow-hover: 0 18px 34px -16px rgba(0,0,0,0.55);
     }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0B1620;
+    --bg-panel:#0F1E2A;
+    --ink:#E9F0F6;
+    --ink-soft:#93A8B7;
+    --accent:#6FA0FF;
+    --accent-warm:#FF9463;
+    --line:rgba(233,240,246,0.14);
+    --line-strong:rgba(233,240,246,0.28);
+    --card-bg:#0F202C;
+    --shadow-hover: 0 18px 34px -16px rgba(0,0,0,0.55);
+  }
+  html{ scroll-padding-top: calc(78px + env(safe-area-inset-top, 0px)); }
+  *,*::before,*::after{ box-sizing:inherit; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    line-height:1.6;
+    transition:background .25s ease, color .25s ease;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.logo{ font-family:'Space Grotesk', system-ui, sans-serif; }
+  a{ color:inherit; text-decoration:none; }
+  img,svg{ max-width:100%; display:block; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 clamp(20px,4vw,48px); }
+  code, .mono{ font-family:'IBM Plex Mono', monospace; }
 
-    body {
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-      background-color: #f9f9f9;
-    }
+  /* faint blueprint grid backdrop */
+  .grid-overlay{
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:56px 56px;
+    opacity:.35;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, black 40%, transparent 85%);
+  }
 
-    /* Container xếp các card theo chiều dọc */
-    .product-list {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      width: 250px;
-    }
+  /* ===== Header ===== */
+  .site-header{
+    position:sticky; top:0; z-index:50;
+    padding-top: env(safe-area-inset-top, 0px);
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    max-width:1080px; margin:0 auto; padding:16px clamp(20px,4vw,48px);
+    display:flex; align-items:center; justify-content:space-between; gap:20px;
+  }
+  .logo{ font-size:1.3rem; font-weight:700; letter-spacing:.02em; }
+  .logo span{ color:var(--accent-warm); }
+  .nav{ display:flex; gap:clamp(16px,2.5vw,34px); }
+  .nav a{
+    font-size:.95rem; color:var(--ink-soft); position:relative; padding:4px 0;
+    transition:color .2s ease;
+  }
+  .nav a::after{
+    content:''; position:absolute; left:0; bottom:-2px; width:0; height:2px;
+    background:var(--accent-warm); transition:width .25s ease;
+  }
+  .nav a:hover, .nav a.active{ color:var(--ink); }
+  .nav a:hover::after, .nav a.active::after{ width:100%; }
+  .header-actions{ display:flex; align-items:center; gap:10px; }
+  .icon-btn{
+    width:40px; height:40px; border-radius:10px; border:1px solid var(--line-strong);
+    background:var(--card-bg); color:var(--ink); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; font-size:1.05rem;
+    transition:transform .2s ease, border-color .2s ease;
+  }
+  .icon-btn:hover{ border-color:var(--accent); transform:translateY(-2px); }
+  .hamburger{
+    display:none; width:40px; height:40px; border-radius:10px; border:1px solid var(--line-strong);
+    background:var(--card-bg); cursor:pointer; flex-direction:column; align-items:center;
+    justify-content:center; gap:5px;
+  }
+  .hamburger span{ width:18px; height:2px; background:var(--ink); transition:transform .25s ease, opacity .25s ease; }
+  .hamburger.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2){ opacity:0; }
+  .hamburger.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
 
-    /* Cấu trúc Card sản phẩm */
-    .product-card {
-      width: 250px;
-      padding: 12px;
-      border-radius: 4px;
-      border: 1px solid #e5e5e5;
-      background-color: #f2f2f2; /* Màu nền xám nhạt mặc định */
-      
-      display: flex;
-      flex-direction: column;
-      position: relative; /* Mỏ neo cho nhãn "MỚI" ::before */
-      transition: all 0.2s ease;
-      overflow: hidden; /* Giữ phần viền đẹp khi chứa ảnh */
+  @media (max-width:1024px){
+    .nav{ gap:20px; }
+  }
+  @media (max-width:768px){
+    .nav{
+      position:fixed; top:calc(72px + env(safe-area-inset-top,0px)); right:0; height:calc(100vh - 72px);
+      width:min(72vw,300px); background:var(--bg-panel); flex-direction:column;
+      padding:32px 28px; gap:26px; border-left:1px solid var(--line);
+      transform:translateX(100%); transition:transform .3s ease; z-index:49;
     }
+    .nav.open{ transform:translateX(0); }
+    .hamburger{ display:flex; }
+  }
 
-    /* Hình ảnh sản phẩm */
-    .product-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      margin-bottom: 15px;
-      background-color: #fff;
-    }
+  section{ position:relative; z-index:1; padding:clamp(64px,9vw,110px) 0; }
+  .eyebrow-line{ display:flex; align-items:center; gap:14px; margin-bottom:14px; color:var(--ink-soft); }
+  .eyebrow-line .tag{
+    font-family:'IBM Plex Mono',monospace; font-size:.78rem; border:1px solid var(--line-strong);
+    padding:3px 9px; border-radius:6px; color:var(--accent);
+  }
+  .eyebrow-line .rule{ flex:1; height:1px; background:var(--line); }
 
-    /* Tên sản phẩm */
-    .product-name {
-      font-size: 18px;
-      font-weight: 700;
-      margin: 0 0 10px 0;
-      color: #000;
-    }
+  /* reveal-on-scroll */
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in-view{ opacity:1; transform:none; }
 
-    /* Giá sản phẩm */
-    .product-price {
-      font-size: 15px;
-      color: #8b0000; /* Màu đỏ đô giống ảnh mẫu */
-      margin: 0;
-    }
+  /* ===== Hero / About ===== */
+  .hero .wrap{
+    display:grid; grid-template-columns:1.15fr .85fr; gap:clamp(30px,5vw,70px); align-items:center;
+  }
+  .hero h1{ font-size:clamp(2.1rem,4.4vw,3.4rem); line-height:1.12; margin:.2em 0 .35em; font-weight:700; }
+  .hero h1 em{ font-style:normal; color:var(--accent); }
+  .hero p.lead{ color:var(--ink-soft); font-size:1.08rem; max-width:52ch; }
+  .stat-row{ display:flex; gap:clamp(18px,3vw,36px); margin-top:30px; flex-wrap:wrap; }
+  .stat b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:1.6rem; color:var(--ink); }
+  .stat span{ font-size:.85rem; color:var(--ink-soft); }
+  .cta-row{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:10px;
+    font-weight:600; font-size:.95rem; cursor:pointer; border:1px solid transparent;
+    transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .btn-primary{ background:var(--accent); color:#fff; }
+  .btn-primary:hover{ transform:translateY(-3px); box-shadow:var(--shadow-hover); }
+  .btn-ghost{ border-color:var(--line-strong); color:var(--ink); }
+  .btn-ghost:hover{ border-color:var(--accent); transform:translateY(-3px); }
 
-    /* Tạo nhãn "MỚI" đè ở góc trên bên trái bằng ::before */
-    .product-card::before {
-      content: "MỚI";
-      position: absolute;
-      top: 0;
-      left: 0;
-      background-color: #cc0000;
-      color: #ffffff;
-      font-size: 13px;
-      font-weight: bold;
-      padding: 3px 8px;
-      z-index: 10;
-    }
+  .id-card{
+    background:var(--card-bg); border:1px solid var(--line); border-radius:18px; padding:26px;
+    position:relative;
+  }
+  .id-card::before, .id-card::after{
+    content:''; position:absolute; width:16px; height:16px; border:2px solid var(--accent-warm);
+  }
+  .id-card::before{ top:-2px; left:-2px; border-right:none; border-bottom:none; }
+  .id-card::after{ bottom:-2px; right:-2px; border-left:none; border-top:none; }
+  .id-card .avatar{
+    width:100%; aspect-ratio:1/1; border-radius:14px; overflow:hidden; margin-bottom:18px;
+    background:linear-gradient(160deg, var(--bg-panel), var(--card-bg)); border:1px solid var(--line);
+  }
+  .id-card dl{ display:grid; grid-template-columns:auto 1fr; gap:8px 14px; font-size:.92rem; margin:0; }
+  .id-card dt{ color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; font-size:.78rem; align-self:center; }
+  .id-card dd{ margin:0; font-weight:500; }
 
-    /* Hiệu ứng khi rê chuột (Hover) */
-    .product-card:hover {
-      border-color: #0056b3;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
+  @media (max-width:1024px){
+    .hero .wrap{ grid-template-columns:1fr; }
+    .id-card{ max-width:380px; }
+  }
 
-    /* Dùng :nth-child(even) để đổi màu nền so le cho card vị trí chẵn (Bàn phím cơ) */
-    .product-card:nth-child(even) {
-      background-color: #a4b8c9; /* Màu xanh xám đúng theo ảnh */
-    }
-  </style>
+  /* ===== Skills ===== */
+  h2{ font-size:clamp(1.7rem,3vw,2.3rem); margin:0 0 8px; }
+  .section-intro{ color:var(--ink-soft); max-width:60ch; margin:0 0 42px; }
+  .skills-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .skill-card{
+    background:var(--card-bg); border:1px solid var(--line); border-radius:14px; padding:20px;
+    transition:transform .25s ease, border-color .25s ease;
+  }
+  .skill-card:hover{ transform:translateY(-6px); border-color:var(--accent); }
+  .skill-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px; }
+  .skill-top b{ font-family:'Space Grotesk',sans-serif; }
+  .skill-top span{ font-family:'IBM Plex Mono',monospace; font-size:.82rem; color:var(--accent); }
+  .gauge{ height:8px; border-radius:6px; background:var(--line); overflow:hidden; }
+  .gauge i{ display:block; height:100%; background:linear-gradient(90deg, var(--accent), var(--accent-warm)); border-radius:6px; width:0; transition:width 1s ease; }
+  @media (max-width:1024px){ .skills-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:768px){ .skills-grid{ grid-template-columns:1fr; } }
+
+  /* ===== Projects ===== */
+  .filter-row{ display:flex; gap:10px; margin-bottom:30px; flex-wrap:wrap; }
+  .filter-btn{
+    padding:9px 18px; border-radius:999px; border:1px solid var(--line-strong); background:transparent;
+    color:var(--ink-soft); font-size:.88rem; cursor:pointer; font-family:'IBM Plex Sans',sans-serif;
+    transition:all .2s ease;
+  }
+  .filter-btn:hover{ border-color:var(--accent); color:var(--ink); }
+  .filter-btn.active{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .projects-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .project-card{
+    background:var(--card-bg); border:1px solid var(--line); border-radius:16px; overflow:hidden;
+    transition:transform .3s ease, box-shadow .3s ease; display:flex; flex-direction:column;
+  }
+  .project-card:hover{ transform:translateY(-8px); box-shadow:var(--shadow-hover); }
+  .project-thumb{
+    aspect-ratio:16/10; background:var(--bg-panel); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; padding:22px;
+  }
+  .project-thumb svg{ width:100%; height:100%; }
+  .project-body{ padding:20px 20px 22px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .project-body h3{ font-size:1.1rem; margin:0; }
+  .project-body p{ color:var(--ink-soft); font-size:.92rem; margin:0; flex:1; }
+  .tag-row{ display:flex; gap:6px; flex-wrap:wrap; }
+  .tag-row span{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; padding:3px 8px; border-radius:6px;
+    border:1px solid var(--line-strong); color:var(--ink-soft);
+  }
+  .project-link{ color:var(--accent); font-weight:600; font-size:.9rem; margin-top:4px; display:inline-flex; align-items:center; gap:6px; }
+  .project-card.hidden-item{ display:none; }
+  @media (max-width:1024px){ .projects-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:768px){ .projects-grid{ grid-template-columns:1fr; } }
+
+  /* ===== Contact ===== */
+  .contact-wrap{ display:grid; grid-template-columns:.9fr 1.1fr; gap:clamp(30px,5vw,60px); }
+  .contact-info p{ color:var(--ink-soft); max-width:40ch; }
+  .contact-links{ display:flex; flex-direction:column; gap:12px; margin-top:24px; }
+  .contact-links a{ display:flex; align-items:center; gap:10px; color:var(--ink); font-weight:500; }
+  .contact-links a:hover{ color:var(--accent); }
+  form{ display:flex; flex-direction:column; gap:20px; }
+  .field{ display:flex; flex-direction:column; gap:6px; position:relative; }
+  .field label{ font-size:.85rem; color:var(--ink-soft); }
+  .field input, .field textarea{
+    background:transparent; border:none; border-bottom:1.5px solid var(--line-strong);
+    padding:10px 2px; font-size:1rem; color:var(--ink); font-family:inherit; outline:none;
+    transition:border-color .2s ease;
+  }
+  .field input:focus, .field textarea:focus{ border-color:var(--accent); }
+  .field textarea{ resize:vertical; min-height:110px; }
+  .field .error-msg{ font-size:.8rem; color:var(--accent-warm); min-height:1.1em; }
+  .field.invalid input, .field.invalid textarea{ border-color:var(--accent-warm); }
+  .char-count{ font-family:'IBM Plex Mono',monospace; font-size:.75rem; color:var(--ink-soft); align-self:flex-end; }
+  .form-status{ font-size:.92rem; padding:12px 14px; border-radius:10px; display:none; }
+  .form-status.ok{ display:block; background:rgba(46,160,90,.14); color:#2E9E5B; }
+  .form-status.bad{ display:block; background:rgba(232,98,44,.12); color:var(--accent-warm); }
+  @media (max-width:1024px){ .contact-wrap{ grid-template-columns:1fr; } }
+
+  /* ===== Footer ===== */
+  footer{
+    border-top:1px dashed var(--line-strong); padding:36px 0 calc(36px + env(safe-area-inset-bottom,0px));
+    position:relative; z-index:1;
+  }
+  .footer-inner{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; color:var(--ink-soft); font-size:.88rem; }
+  .footer-inner a{ margin-left:14px; }
+  .footer-inner a:hover{ color:var(--accent); }
+  #todayDate{ font-family:'IBM Plex Mono',monospace; }
+
+  ::selection{ background:var(--accent); color:#fff; }
+</style>
 </head>
 <body>
+<div class="grid-overlay"></div>
 
-  <div class="product-list">
-    <!-- Card 1 -->
-    <div class="product-card">
-      <img src="https://cf.shopee.vn/file/sg-11134201-22100-tyb9vvkk66iva2" alt="Tai nghe Bluetooth" class="product-img">
-      <h3 class="product-name">Tai nghe Bluetooth</h3>
-      <p class="product-price">299.000đ</p>
-    </div>
-
-    <!-- Card 2 (Vị trí chẵn - tự đổi màu nền) -->
-    <div class="product-card">
-      <img src="https://th.bing.com/th/id/R.38582c1c438e4b4e1684760e35b4ab00?rik=GbMSOxWw7Bkhug&pid=ImgRaw&r=0" alt="Bàn phím cơ" class="product-img">
-      <h3 class="product-name">Bàn phím cơ</h3>
-      <p class="product-price">890.000đ</p>
-    </div>
-
-    <!-- Card 3 -->
-    <div class="product-card">
-      <img src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/86/233296/chuot-khong-day-silent-logitech-m331-070125-014541-867-600x600.jpg" alt="Chuột không dây" class="product-img">
-      <h3 class="product-name">Chuột không dây</h3>
-      <p class="product-price">199.000đ</p>
+<header class="site-header" id="top">
+  <div class="header-inner">
+    <a href="#top" class="logo">MK<span>.</span></a>
+    <nav class="nav" id="nav">
+      <a data-link href="#about">Giới thiệu</a>
+      <a data-link href="#skills">Kỹ năng</a>
+      <a data-link href="#projects">Dự án</a>
+      <a data-link href="#contact">Liên hệ</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" id="themeToggle" aria-label="Chuyển giao diện sáng / tối">🌙</button>
+      <button class="hamburger" id="hamburger" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </div>
+</header>
 
+<main>
+
+  <!-- ===== GIỚI THIỆU ===== -->
+  <section class="hero" id="about">
+    <div class="wrap">
+      <div class="reveal">
+        <div class="eyebrow-line"><span class="tag">v1.0</span><span class="rule"></span></div>
+        <h1>Xin chào, mình là<br><em>Minh Khoa</em>.</h1>
+        <p class="lead">Sinh viên năm 3 ngành Công nghệ thông tin tại Đại học Bách Khoa Hà Nội. Mình thích dựng giao diện web gọn gàng, viết code dễ đọc, và thỉnh thoảng làm vài game nhỏ cho vui.</p>
+        <div class="stat-row">
+          <div class="stat"><b>3+</b><span>Dự án hoàn thành</span></div>
+          <div class="stat"><b>2</b><span>Năm học lập trình</span></div>
+          <div class="stat"><b>HTML·CSS·JS</b><span>Công cụ chính</span></div>
+        </div>
+        <div class="cta-row">
+          <a href="#projects" class="btn btn-primary" data-link>Xem dự án</a>
+          <a href="#contact" class="btn btn-ghost" data-link>Liên hệ với mình</a>
+        </div>
+      </div>
+
+      <div class="id-card reveal">
+        <div class="avatar">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="200" fill="none"/>
+            <circle cx="100" cy="78" r="34" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+            <path d="M40 176c6-38 34-58 60-58s54 20 60 58" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+            <path d="M20 20h14M20 20v14M180 20h-14M180 20v14M20 180h14M20 180v-14M180 180h-14M180 180v-14" stroke="var(--accent-warm)" stroke-width="2"/>
+          </svg>
+        </div>
+        <dl>
+          <dt>Họ tên</dt><dd>Đỗ Minh Khoa</dd>
+          <dt>Ngành</dt><dd>Công nghệ thông tin</dd>
+          <dt>Trường</dt><dd>ĐH Bách Khoa Hà Nội</dd>
+          <dt>Sở thích</dt><dd>Lập trình game, đọc sách</dd>
+          <dt>Mục tiêu</dt><dd>Trở thành Front-end Dev</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== KỸ NĂNG ===== -->
+  <section class="skills" id="skills">
+    <div class="wrap">
+      <div class="eyebrow-line reveal"><span class="tag">skills</span><span class="rule"></span></div>
+      <h2 class="reveal">Kỹ năng</h2>
+      <p class="section-intro reveal">Những công cụ mình dùng thường xuyên nhất khi xây dựng một trang web, từ cấu trúc nội dung đến tương tác người dùng.</p>
+      <div class="skills-grid">
+        <div class="skill-card reveal" data-level="88">
+          <div class="skill-top"><b>HTML</b><span>88%</span></div>
+          <div class="gauge"><i></i></div>
+        </div>
+        <div class="skill-card reveal" data-level="80">
+          <div class="skill-top"><b>CSS</b><span>80%</span></div>
+          <div class="gauge"><i></i></div>
+        </div>
+        <div class="skill-card reveal" data-level="65">
+          <div class="skill-top"><b>JavaScript</b><span>65%</span></div>
+          <div class="gauge"><i></i></div>
+        </div>
+        <div class="skill-card reveal" data-level="70">
+          <div class="skill-top"><b>SQL</b><span>70%</span></div>
+          <div class="gauge"><i></i></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DỰ ÁN ===== -->
+  <section class="projects" id="projects">
+    <div class="wrap">
+      <div class="eyebrow-line reveal"><span class="tag">projects</span><span class="rule"></span></div>
+      <h2 class="reveal">Dự án</h2>
+      <p class="section-intro reveal">Một vài sản phẩm mình đã tự tay xây dựng trong quá trình học. Lọc theo công nghệ để xem nhanh hơn.</p>
+
+      <div class="filter-row reveal">
+        <button class="filter-btn active" data-filter="all">Tất cả</button>
+        <button class="filter-btn" data-filter="htmlcss">HTML/CSS</button>
+        <button class="filter-btn" data-filter="javascript">JavaScript</button>
+      </div>
+
+      <div class="projects-grid">
+        <article class="project-card reveal" data-category="htmlcss">
+          <div class="project-thumb">
+            <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="6" width="188" height="128" rx="8" fill="none" stroke="var(--line-strong)" stroke-width="2"/>
+              <path d="M20 100 L55 60 L80 85 L110 40 L140 75 L180 45" fill="none" stroke="var(--accent)" stroke-width="3"/>
+              <circle cx="55" cy="60" r="4" fill="var(--accent-warm)"/>
+              <circle cx="110" cy="40" r="4" fill="var(--accent-warm)"/>
+              <circle cx="180" cy="45" r="4" fill="var(--accent-warm)"/>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3>Website môi trường Hà Nội</h3>
+            <p>Trang thông tin trực quan hoá chỉ số chất lượng không khí theo từng quận, dựng bằng HTML/CSS thuần và biểu đồ SVG.</p>
+            <div class="tag-row"><span>HTML</span><span>CSS</span><span>JS</span></div>
+            <a href="#" class="project-link" onclick="return false;">Xem dự án →</a>
+          </div>
+        </article>
+
+        <article class="project-card reveal" data-category="javascript">
+          <div class="project-thumb">
+            <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="100" cy="70" r="38" fill="none" stroke="var(--accent)" stroke-width="3"/>
+              <path d="M62 70a38 14 0 1 0 76 0a38 14 0 1 0 -76 0" fill="none" stroke="var(--accent-warm)" stroke-width="2"/>
+              <path d="M100 20v14M100 106v14M46 70h14M140 70h14" stroke="var(--line-strong)" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3>Game bảo vệ Trái Đất</h3>
+            <p>Mini game bắn thiên thạch dùng Canvas API và JavaScript thuần, có tính điểm và tăng độ khó theo thời gian.</p>
+            <div class="tag-row"><span>HTML</span><span>CSS</span><span>JS</span></div>
+            <a href="#" class="project-link" onclick="return false;">Xem dự án →</a>
+          </div>
+        </article>
+
+        <article class="project-card reveal" data-category="javascript">
+          <div class="project-thumb">
+            <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+              <rect x="16" y="24" width="168" height="100" rx="6" fill="none" stroke="var(--line-strong)" stroke-width="2"/>
+              <rect x="16" y="24" width="168" height="18" rx="6" fill="var(--accent)" opacity=".15"/>
+              <circle cx="28" cy="33" r="3" fill="var(--accent-warm)"/>
+              <circle cx="38" cy="33" r="3" fill="var(--accent)"/>
+              <line x1="34" y1="60" x2="140" y2="60" stroke="var(--accent)" stroke-width="2"/>
+              <line x1="34" y1="76" x2="160" y2="76" stroke="var(--line-strong)" stroke-width="2"/>
+              <line x1="34" y1="92" x2="110" y2="92" stroke="var(--line-strong)" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3>Website cá nhân (bài này!)</h3>
+            <p>Chính là trang bạn đang xem — bố cục bằng Flexbox &amp; Grid, có dark mode, validate form và scroll reveal.</p>
+            <div class="tag-row"><span>HTML</span><span>CSS</span><span>JS</span></div>
+            <a href="#" class="project-link" onclick="return false;">Xem dự án →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LIÊN HỆ ===== -->
+  <section class="contact" id="contact">
+    <div class="wrap contact-wrap">
+      <div class="contact-info reveal">
+        <div class="eyebrow-line"><span class="tag">contact</span><span class="rule"></span></div>
+        <h2>Liên hệ</h2>
+        <p>Có dự án hay muốn trao đổi về lập trình? Điền form bên cạnh hoặc liên hệ trực tiếp qua các kênh dưới đây, mình sẽ phản hồi sớm nhất có thể.</p>
+        <div class="contact-links">
+          <a href="mailto:minhkhoa.dev@example.com">✉️ minhkhoa.dev@example.com</a>
+          <a href="#" onclick="return false;">💻 github.com/minhkhoa-dev</a>
+          <a href="#" onclick="return false;">🔗 facebook.com/minhkhoa</a>
+        </div>
+      </div>
+
+      <form id="contactForm" class="reveal" novalidate>
+        <div class="field" id="field-name">
+          <label for="name">Họ tên</label>
+          <input type="text" id="name" name="name" placeholder="Nguyễn Văn A">
+          <div class="error-msg"></div>
+        </div>
+        <div class="field" id="field-email">
+          <label for="email">Email</label>
+          <input type="text" id="email" name="email" placeholder="ban@gmail.com">
+          <div class="error-msg"></div>
+        </div>
+        <div class="field" id="field-subject">
+          <label for="subject">Chủ đề</label>
+          <input type="text" id="subject" name="subject" placeholder="Trao đổi về dự án web">
+          <div class="error-msg"></div>
+        </div>
+        <div class="field" id="field-message">
+          <label for="message">Nội dung</label>
+          <textarea id="message" name="message" placeholder="Nội dung tin nhắn (10–300 ký tự)..."></textarea>
+          <div class="char-count"><span id="charCount">0</span>/300</div>
+          <div class="error-msg"></div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="align-self:flex-start;">Gửi liên hệ</button>
+        <div class="form-status" id="formStatus"></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <span>© <span id="year"></span> Đỗ Minh Khoa — <span id="todayDate"></span></span>
+    <span>
+      <a href="mailto:minhkhoa.dev@example.com">Email</a>
+      <a href="#" onclick="return false;">Facebook</a>
+      <a href="#" onclick="return false;">GitHub</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- 1. Hamburger menu ---------- */
+  var hamburger = document.getElementById('hamburger');
+  var nav = document.getElementById('nav');
+  hamburger.addEventListener('click', function(){
+    var isOpen = nav.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  nav.querySelectorAll('a').forEach(function(link){
+    link.addEventListener('click', function(){
+      nav.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded','false');
+    });
+  });
+
+  /* ---------- 2. Dark / Light mode ---------- */
+  var themeBtn = document.getElementById('themeToggle');
+  function applyTheme(theme){
+    if(theme === 'dark'){
+      document.documentElement.setAttribute('data-theme','dark');
+      themeBtn.textContent = '☀️';
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      themeBtn.textContent = '🌙';
+    }
+  }
+  var saved = null;
+  try{ saved = localStorage.getItem('mk-theme'); }catch(e){}
+  if(saved){ applyTheme(saved); }
+  else {
+    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(prefersDark ? 'dark' : 'light');
+  }
+  themeBtn.addEventListener('click', function(){
+    var current = document.documentElement.getAttribute('data-theme');
+    var next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try{ localStorage.setItem('mk-theme', next); }catch(e){}
+  });
+
+  /* ---------- 3. Smooth scroll ---------- */
+  var headerEl = document.querySelector('.site-header');
+  document.querySelectorAll('[data-link]').forEach(function(link){
+    link.addEventListener('click', function(e){
+      var targetId = link.getAttribute('href');
+      if(!targetId || targetId.charAt(0) !== '#') return;
+      var target = document.querySelector(targetId);
+      if(!target) return;
+      e.preventDefault();
+      var headerH = headerEl ? headerEl.offsetHeight : 0;
+      var top = target.getBoundingClientRect().top + window.pageYOffset - headerH - 10;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    });
+  });
+
+  /* ---------- 4. Scroll reveal + skill gauges ---------- */
+  var revealEls = document.querySelectorAll('.reveal');
+  var gaugesFilled = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(function(el){ io.observe(el); });
+
+  var skillsSection = document.getElementById('skills');
+  var skillIo = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting && !gaugesFilled){
+        gaugesFilled = true;
+        document.querySelectorAll('.skill-card').forEach(function(card){
+          var level = card.getAttribute('data-level') || '0';
+          var bar = card.querySelector('.gauge i');
+          requestAnimationFrame(function(){ bar.style.width = level + '%'; });
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+  if(skillsSection) skillIo.observe(skillsSection);
+
+  /* ---------- 5. Lọc dự án ---------- */
+  var filterButtons = document.querySelectorAll('.filter-btn');
+  var projectCards = document.querySelectorAll('.project-card');
+  filterButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      filterButtons.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var filter = btn.getAttribute('data-filter');
+      projectCards.forEach(function(card){
+        var match = filter === 'all' || card.getAttribute('data-category') === filter;
+        card.classList.toggle('hidden-item', !match);
+      });
+    });
+  });
+
+  /* ---------- 6. Validate form + đếm ký tự ---------- */
+  var form = document.getElementById('contactForm');
+  var nameInput = document.getElementById('name');
+  var emailInput = document.getElementById('email');
+  var subjectInput = document.getElementById('subject');
+  var messageInput = document.getElementById('message');
+  var charCount = document.getElementById('charCount');
+  var formStatus = document.getElementById('formStatus');
+
+  messageInput.addEventListener('input', function(){
+    charCount.textContent = messageInput.value.length;
+  });
+
+  function setError(fieldId, message){
+    var field = document.getElementById(fieldId);
+    field.classList.toggle('invalid', !!message);
+    field.querySelector('.error-msg').textContent = message || '';
+  }
+
+  function validate(){
+    var ok = true;
+
+    if(nameInput.value.trim().length === 0){
+      setError('field-name', 'Vui lòng nhập họ tên.');
+      ok = false;
+    } else {
+      setError('field-name', '');
+    }
+
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailPattern.test(emailInput.value.trim())){
+      setError('field-email', 'Email không đúng định dạng (vd: abc@gmail.com).');
+      ok = false;
+    } else {
+      setError('field-email', '');
+    }
+
+    if(subjectInput.value.trim().length === 0){
+      setError('field-subject', 'Vui lòng nhập chủ đề.');
+      ok = false;
+    } else {
+      setError('field-subject', '');
+    }
+
+    var msgLen = messageInput.value.trim().length;
+    if(msgLen < 10){
+      setError('field-message', 'Nội dung phải có ít nhất 10 ký tự.');
+      ok = false;
+    } else if(msgLen > 300){
+      setError('field-message', 'Nội dung không được vượt quá 300 ký tự.');
+      ok = false;
+    } else {
+      setError('field-message', '');
+    }
+
+    return ok;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    formStatus.className = 'form-status';
+    if(validate()){
+      formStatus.textContent = 'Gửi liên hệ thành công! Mình sẽ phản hồi sớm nhất có thể.';
+      formStatus.className = 'form-status ok';
+      form.reset();
+      charCount.textContent = '0';
+    } else {
+      formStatus.textContent = 'Vui lòng kiểm tra lại các trường được đánh dấu ở trên.';
+      formStatus.className = 'form-status bad';
+    }
+  });
+
+  /* ---------- 7. Ngày hiện tại ---------- */
+  var now = new Date();
+  var dd = String(now.getDate()).padStart(2,'0');
+  var mm = String(now.getMonth()+1).padStart(2,'0');
+  var yyyy = now.getFullYear();
+  document.getElementById('todayDate').textContent = 'Hôm nay là ' + dd + '/' + mm + '/' + yyyy;
+  document.getElementById('year').textContent = yyyy;
+
+  /* Active menu link highlight while scrolling */
+  var sections = ['about','skills','projects','contact'].map(function(id){ return document.getElementById(id); });
+  var navLinks = nav.querySelectorAll('a[href^="#"]');
+  var sectionIo = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        navLinks.forEach(function(l){ l.classList.remove('active'); });
+        var current = nav.querySelector('a[href="#' + entry.target.id + '"]');
+        if(current) current.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  sections.forEach(function(s){ if(s) sectionIo.observe(s); });
+
+})();
+</script>
 </body>
 </html>
