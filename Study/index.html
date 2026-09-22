@@ -246,10 +246,21 @@
   .projects-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
   .project-card{
     background:var(--card-bg); border:1px solid var(--line); border-radius:16px; overflow:hidden;
-    transition:transform .3s ease, box-shadow .3s ease; display:flex; flex-direction:column;
+    transition:transform .3s ease, box-shadow .3s ease, background .35s ease, border-color .3s ease;
+    display:flex; flex-direction:column; position:relative;
   }
-  .project-card:hover{ transform:translateY(-8px); box-shadow:var(--shadow-hover); }
-  .project-body{ padding:26px 22px 24px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .project-card::before{
+    content:''; position:absolute; top:-50px; right:-50px; width:160px; height:160px; border-radius:50%;
+    background:var(--pj, var(--accent)); opacity:0; filter:blur(34px);
+    transition:opacity .35s ease; pointer-events:none;
+  }
+  .project-card:hover{
+    transform:translateY(-8px); box-shadow:var(--shadow-hover);
+    background:linear-gradient(160deg, color-mix(in srgb, var(--card-bg) 62%, var(--pj, var(--accent)) 38%), var(--card-bg) 75%);
+    border-color:color-mix(in srgb, var(--pj, var(--accent)) 55%, var(--line-strong));
+  }
+  .project-card:hover::before{ opacity:.45; }
+  .project-body{ padding:26px 22px 24px; display:flex; flex-direction:column; gap:10px; flex:1; position:relative; z-index:1; }
   .project-body h3{ font-size:1.1rem; margin:0; }
   .project-body p{ color:var(--ink-soft); font-size:.92rem; margin:0; flex:1; }
   .tag-row{ display:flex; gap:6px; flex-wrap:wrap; }
@@ -336,9 +347,9 @@
         <dl>
           <dt>Họ tên</dt><dd>Vũ Tùng An</dd>
           <dt>Ngành</dt><dd>Công nghệ thông tin</dd>
-          <dt>Trường</dt><dd>ĐH Bách Khoa Hà Nội</dd>
-          <dt>Sở thích</dt><dd>Lập trình game, đọc sách</dd>
-          <dt>Mục tiêu</dt><dd>Trở thành Front-end Dev</dd>
+          <dt>Trường</dt><dd>Học viện Công nghệ Bưu chính Viễn thông</dd>
+          <dt>Sở thích</dt><dd>Lập trình game, Chơi game</dd>
+          <dt>Mục tiêu</dt><dd>Trở thành Game Developer</dd>
         </dl>
       </div>
 
@@ -386,7 +397,7 @@
       </div>
 
       <div class="projects-grid">
-        <article class="project-card reveal" data-category="htmlcss">
+        <article class="project-card reveal" data-category="htmlcss" style="--pj:#2E9E5B">
           <div class="project-body">
             <h3>Website môi trường Hà Nội</h3>
             <p>Trang thông tin trực quan hoá dữ liệu chất lượng không khí, giúp người xem dễ dàng theo dõi tình trạng môi trường theo từng khu vực.</p>
@@ -395,7 +406,7 @@
           </div>
         </article>
 
-        <article class="project-card reveal" data-category="javascript">
+        <article class="project-card reveal" data-category="javascript" style="--pj:#FF6B35">
           <div class="project-body">
             <h3>Game bảo vệ Trái Đất</h3>
             <p>Mini game hành động đơn giản, có tính điểm và độ khó tăng dần theo thời gian chơi.</p>
@@ -404,7 +415,7 @@
           </div>
         </article>
 
-        <article class="project-card reveal" data-category="javascript">
+        <article class="project-card reveal" data-category="javascript" style="--pj:#2965F1">
           <div class="project-body">
             <h3>Website cá nhân (bài này!)</h3>
             <p>Chính là trang bạn đang xem — giao diện gọn gàng, có chế độ sáng/tối và các hiệu ứng tương tác mượt mà.</p>
