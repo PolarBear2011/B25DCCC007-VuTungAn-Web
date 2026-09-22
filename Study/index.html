@@ -205,17 +205,32 @@
   /* ===== Skills ===== */
   h2{ font-size:clamp(1.7rem,3vw,2.3rem); margin:0 0 8px; }
   .section-intro{ color:var(--ink-soft); max-width:60ch; margin:0 0 42px; }
-  .skills-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .skills-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
   .skill-card{
-    background:var(--card-bg); border:1px solid var(--line); border-radius:14px; padding:20px;
-    transition:transform .25s ease, border-color .25s ease;
+    background:linear-gradient(165deg, var(--card-bg), color-mix(in srgb, var(--card-bg) 80%, var(--sk, var(--accent)) 20%));
+    border:1px solid var(--line); border-radius:14px; padding:26px 18px 22px;
+    transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    position:relative; overflow:hidden;
+    text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:0; min-height:104px;
   }
-  .skill-card:hover{ transform:translateY(-6px); border-color:var(--accent); }
-  .skill-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px; }
-  .skill-top b{ font-family:'Space Grotesk',sans-serif; }
-  .skill-top span{ font-family:'IBM Plex Mono',monospace; font-size:.82rem; color:var(--accent); }
-  .gauge{ height:8px; border-radius:6px; background:var(--line); overflow:hidden; }
-  .gauge i{ display:block; height:100%; background:linear-gradient(90deg, var(--accent), var(--accent-warm)); border-radius:6px; width:0; transition:width 1s ease; }
+  .skill-card::before{
+    content:''; position:absolute; top:0; left:0; right:0; height:4px;
+    background:var(--sk, var(--accent));
+  }
+  .skill-card::after{
+    content:''; position:absolute; width:10px; height:10px; opacity:0; transition:opacity .25s ease;
+    bottom:8px; right:8px; border:2px solid var(--sk, var(--accent-warm)); border-left:none; border-top:none;
+  }
+  .skill-card:hover::after{ opacity:1; }
+  .skill-card:hover{
+    transform:translateY(-6px);
+    border-color:color-mix(in srgb, var(--sk, var(--accent)) 55%, var(--line-strong));
+    box-shadow:0 16px 28px -18px color-mix(in srgb, var(--sk, var(--accent)) 55%, transparent);
+  }
+  .skill-card b{
+    font-family:'Space Grotesk',sans-serif; font-size:1.08rem; font-weight:600; letter-spacing:.015em;
+  }
   @media (max-width:1024px){ .skills-grid{ grid-template-columns:repeat(2,1fr); } }
   @media (max-width:768px){ .skills-grid{ grid-template-columns:1fr; } }
 
@@ -352,22 +367,12 @@
       <h2 class="reveal">Kỹ năng</h2>
       <p class="section-intro reveal">Những công cụ tôi dùng thường xuyên nhất</p>
       <div class="skills-grid">
-        <div class="skill-card reveal" data-level="88">
-          <div class="skill-top"><b>HTML</b><span>88%</span></div>
-          <div class="gauge"><i></i></div>
-        </div>
-        <div class="skill-card reveal" data-level="80">
-          <div class="skill-top"><b>CSS</b><span>80%</span></div>
-          <div class="gauge"><i></i></div>
-        </div>
-        <div class="skill-card reveal" data-level="65">
-          <div class="skill-top"><b>JavaScript</b><span>65%</span></div>
-          <div class="gauge"><i></i></div>
-        </div>
-        <div class="skill-card reveal" data-level="70">
-          <div class="skill-top"><b>SQL</b><span>70%</span></div>
-          <div class="gauge"><i></i></div>
-        </div>
+        <div class="skill-card reveal" style="--sk:#E44D26"><b>HTML</b></div>
+        <div class="skill-card reveal" style="--sk:#2965F1"><b>CSS</b></div>
+        <div class="skill-card reveal" style="--sk:#F0DB4F"><b>JavaScript</b></div>
+        <div class="skill-card reveal" style="--sk:#336791"><b>SQL</b></div>
+        <div class="skill-card reveal" style="--sk:#FF6B35"><b>GML</b></div>
+        <div class="skill-card reveal" style="--sk:#3776AB"><b>Python</b></div>
       </div>
     </div>
   </section>
@@ -559,7 +564,6 @@
 
   /* ---------- 4. Scroll reveal + skill gauges ---------- */
   var revealEls = document.querySelectorAll('.reveal');
-  var gaugesFilled = false;
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
       if(entry.isIntersecting){
@@ -569,21 +573,6 @@
     });
   }, { threshold: 0.15 });
   revealEls.forEach(function(el){ io.observe(el); });
-
-  var skillsSection = document.getElementById('skills');
-  var skillIo = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(entry.isIntersecting && !gaugesFilled){
-        gaugesFilled = true;
-        document.querySelectorAll('.skill-card').forEach(function(card){
-          var level = card.getAttribute('data-level') || '0';
-          var bar = card.querySelector('.gauge i');
-          requestAnimationFrame(function(){ bar.style.width = level + '%'; });
-        });
-      }
-    });
-  }, { threshold: 0.3 });
-  if(skillsSection) skillIo.observe(skillsSection);
 
   /* ---------- 5. Lọc dự án ---------- */
   var filterButtons = document.querySelectorAll('.filter-btn');
