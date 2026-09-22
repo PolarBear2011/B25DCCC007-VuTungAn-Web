@@ -249,12 +249,7 @@
     transition:transform .3s ease, box-shadow .3s ease; display:flex; flex-direction:column;
   }
   .project-card:hover{ transform:translateY(-8px); box-shadow:var(--shadow-hover); }
-  .project-thumb{
-    aspect-ratio:16/10; background:var(--bg-panel); border-bottom:1px solid var(--line);
-    display:flex; align-items:center; justify-content:center; padding:22px;
-  }
-  .project-thumb svg{ width:100%; height:100%; }
-  .project-body{ padding:20px 20px 22px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .project-body{ padding:26px 22px 24px; display:flex; flex-direction:column; gap:10px; flex:1; }
   .project-body h3{ font-size:1.1rem; margin:0; }
   .project-body p{ color:var(--ink-soft); font-size:.92rem; margin:0; flex:1; }
   .tag-row{ display:flex; gap:6px; flex-wrap:wrap; }
@@ -382,7 +377,7 @@
     <div class="wrap">
       <div class="eyebrow-line reveal"><span class="rule"></span></div>
       <h2 class="reveal">Dự án</h2>
-      <p class="section-intro reveal">Một vài sản phẩm mình đã tự tay xây dựng trong quá trình học. Lọc theo công nghệ để xem nhanh hơn.</p>
+      <p class="section-intro reveal">Một vài sản phẩm tôi đã tự tay xây dựng trong quá trình học.</p>
 
       <div class="filter-row reveal">
         <button class="filter-btn active" data-filter="all">Tất cả</button>
@@ -392,54 +387,27 @@
 
       <div class="projects-grid">
         <article class="project-card reveal" data-category="htmlcss">
-          <div class="project-thumb">
-            <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
-              <rect x="6" y="6" width="188" height="128" rx="8" fill="none" stroke="var(--line-strong)" stroke-width="2"/>
-              <path d="M20 100 L55 60 L80 85 L110 40 L140 75 L180 45" fill="none" stroke="var(--accent)" stroke-width="3"/>
-              <circle cx="55" cy="60" r="4" fill="var(--accent-warm)"/>
-              <circle cx="110" cy="40" r="4" fill="var(--accent-warm)"/>
-              <circle cx="180" cy="45" r="4" fill="var(--accent-warm)"/>
-            </svg>
-          </div>
           <div class="project-body">
             <h3>Website môi trường Hà Nội</h3>
-            <p>Trang thông tin trực quan hoá chỉ số chất lượng không khí theo từng quận, dựng bằng HTML/CSS thuần và biểu đồ SVG.</p>
+            <p>Trang thông tin trực quan hoá dữ liệu chất lượng không khí, giúp người xem dễ dàng theo dõi tình trạng môi trường theo từng khu vực.</p>
             <div class="tag-row"><span>HTML</span><span>CSS</span><span>JS</span></div>
             <a href="#" class="project-link" onclick="return false;">Xem dự án →</a>
           </div>
         </article>
 
         <article class="project-card reveal" data-category="javascript">
-          <div class="project-thumb">
-            <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="100" cy="70" r="38" fill="none" stroke="var(--accent)" stroke-width="3"/>
-              <path d="M62 70a38 14 0 1 0 76 0a38 14 0 1 0 -76 0" fill="none" stroke="var(--accent-warm)" stroke-width="2"/>
-              <path d="M100 20v14M100 106v14M46 70h14M140 70h14" stroke="var(--line-strong)" stroke-width="2"/>
-            </svg>
-          </div>
           <div class="project-body">
             <h3>Game bảo vệ Trái Đất</h3>
-            <p>Mini game bắn thiên thạch dùng Canvas API và JavaScript thuần, có tính điểm và tăng độ khó theo thời gian.</p>
+            <p>Mini game hành động đơn giản, có tính điểm và độ khó tăng dần theo thời gian chơi.</p>
             <div class="tag-row"><span>HTML</span><span>CSS</span><span>JS</span></div>
             <a href="#" class="project-link" onclick="return false;">Xem dự án →</a>
           </div>
         </article>
 
         <article class="project-card reveal" data-category="javascript">
-          <div class="project-thumb">
-            <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
-              <rect x="16" y="24" width="168" height="100" rx="6" fill="none" stroke="var(--line-strong)" stroke-width="2"/>
-              <rect x="16" y="24" width="168" height="18" rx="6" fill="var(--accent)" opacity=".15"/>
-              <circle cx="28" cy="33" r="3" fill="var(--accent-warm)"/>
-              <circle cx="38" cy="33" r="3" fill="var(--accent)"/>
-              <line x1="34" y1="60" x2="140" y2="60" stroke="var(--accent)" stroke-width="2"/>
-              <line x1="34" y1="76" x2="160" y2="76" stroke="var(--line-strong)" stroke-width="2"/>
-              <line x1="34" y1="92" x2="110" y2="92" stroke="var(--line-strong)" stroke-width="2"/>
-            </svg>
-          </div>
           <div class="project-body">
             <h3>Website cá nhân (bài này!)</h3>
-            <p>Chính là trang bạn đang xem — bố cục bằng Flexbox &amp; Grid, có dark mode, validate form và scroll reveal.</p>
+            <p>Chính là trang bạn đang xem — giao diện gọn gàng, có chế độ sáng/tối và các hiệu ứng tương tác mượt mà.</p>
             <div class="tag-row"><span>HTML</span><span>CSS</span><span>JS</span></div>
             <a href="#" class="project-link" onclick="return false;">Xem dự án →</a>
           </div>
