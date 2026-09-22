@@ -146,17 +146,27 @@
   .reveal{ opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease; }
   .reveal.in-view{ opacity:1; transform:none; }
 
-  /* ===== Hero / About ===== */
-  .hero .wrap{
-    display:grid; grid-template-columns:1.15fr .85fr; gap:clamp(30px,5vw,70px); align-items:center;
+  /* ===== Hero / About (dạng khối liệt kê) ===== */
+  .wrap-narrow{ max-width:760px; }
+  .stack-label{
+    font-size:1.1rem; font-weight:700; margin:0 0 14px;
   }
-  .hero h1{ font-size:clamp(2.1rem,4.4vw,3.4rem); line-height:1.12; margin:.2em 0 .35em; font-weight:700; }
-  .hero h1 em{ font-style:normal; color:var(--accent); }
-  .hero p.lead{ color:var(--ink-soft); font-size:1.08rem; max-width:52ch; }
-  .stat-row{ display:flex; gap:clamp(18px,3vw,36px); margin-top:30px; flex-wrap:wrap; }
-  .stat b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:1.6rem; color:var(--ink); }
-  .stat span{ font-size:.85rem; color:var(--ink-soft); }
-  .cta-row{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
+  .info-block{
+    border-left:3px solid var(--accent); padding:2px 0 2px 20px; margin-bottom:44px;
+  }
+  .info-block .name{ font-weight:700; font-size:1.05rem; margin:0 0 6px; letter-spacing:.02em; }
+  .info-block .role{ font-style:italic; color:var(--ink-soft); margin:0 0 10px; }
+  .info-block .quote{ margin:0; color:var(--ink); }
+  .info-block p{ margin:0 0 8px; }
+  .info-block p:last-child{ margin-bottom:0; }
+  .skill-inline{ color:var(--ink-soft); }
+  .scroll-down{
+    width:44px; height:44px; border-radius:50%; border:1px solid var(--line-strong);
+    display:flex; align-items:center; justify-content:center; margin:10px auto 0;
+    color:var(--ink); font-size:1.1rem; transition:transform .2s ease, border-color .2s ease;
+  }
+  .scroll-down:hover{ transform:translateY(4px); border-color:var(--accent); color:var(--accent); }
+
   .btn{
     display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:10px;
     font-weight:600; font-size:.95rem; cursor:pointer; border:1px solid transparent;
@@ -166,28 +176,6 @@
   .btn-primary:hover{ transform:translateY(-3px); box-shadow:var(--shadow-hover); }
   .btn-ghost{ border-color:var(--line-strong); color:var(--ink); }
   .btn-ghost:hover{ border-color:var(--accent); transform:translateY(-3px); }
-
-  .id-card{
-    background:var(--card-bg); border:1px solid var(--line); border-radius:18px; padding:26px;
-    position:relative;
-  }
-  .id-card::before, .id-card::after{
-    content:''; position:absolute; width:16px; height:16px; border:2px solid var(--accent-warm);
-  }
-  .id-card::before{ top:-2px; left:-2px; border-right:none; border-bottom:none; }
-  .id-card::after{ bottom:-2px; right:-2px; border-left:none; border-top:none; }
-  .id-card .avatar{
-    width:100%; aspect-ratio:1/1; border-radius:14px; overflow:hidden; margin-bottom:18px;
-    background:linear-gradient(160deg, var(--bg-panel), var(--card-bg)); border:1px solid var(--line);
-  }
-  .id-card dl{ display:grid; grid-template-columns:auto 1fr; gap:8px 14px; font-size:.92rem; margin:0; }
-  .id-card dt{ color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; font-size:.78rem; align-self:center; }
-  .id-card dd{ margin:0; font-weight:500; }
-
-  @media (max-width:1024px){
-    .hero .wrap{ grid-template-columns:1fr; }
-    .id-card{ max-width:380px; }
-  }
 
   /* ===== Skills ===== */
   h2{ font-size:clamp(1.7rem,3vw,2.3rem); margin:0 0 8px; }
@@ -300,39 +288,26 @@
 
   <!-- ===== GIỚI THIỆU ===== -->
   <section class="hero" id="about">
-    <div class="wrap">
-      <div class="reveal">
-        <div class="eyebrow-line"><span class="tag">v1.0</span><span class="rule"></span></div>
-        <h1>Xin chào, mình là<br><em>Minh Khoa</em>.</h1>
-        <p class="lead">Sinh viên năm 3 ngành Công nghệ thông tin tại Đại học Bách Khoa Hà Nội. Mình thích dựng giao diện web gọn gàng, viết code dễ đọc, và thỉnh thoảng làm vài game nhỏ cho vui.</p>
-        <div class="stat-row">
-          <div class="stat"><b>3+</b><span>Dự án hoàn thành</span></div>
-          <div class="stat"><b>2</b><span>Năm học lập trình</span></div>
-          <div class="stat"><b>HTML·CSS·JS</b><span>Công cụ chính</span></div>
-        </div>
-        <div class="cta-row">
-          <a href="#projects" class="btn btn-primary" data-link>Xem dự án</a>
-          <a href="#contact" class="btn btn-ghost" data-link>Liên hệ với mình</a>
-        </div>
+    <div class="wrap wrap-narrow">
+
+      <h3 class="stack-label reveal">Trang chủ</h3>
+      <div class="info-block reveal">
+        <p class="name">VŨ TÙNG AN</p>
+        <p class="role">Sinh viên Công nghệ Thông tin</p>
+        <p class="quote">"Building, learning and improving through every project."</p>
       </div>
 
-      <div class="id-card reveal">
-        <div class="avatar">
-          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <rect width="200" height="200" fill="none"/>
-            <circle cx="100" cy="78" r="34" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
-            <path d="M40 176c6-38 34-58 60-58s54 20 60 58" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
-            <path d="M20 20h14M20 20v14M180 20h-14M180 20v14M20 180h14M20 180v-14M180 180h-14M180 180v-14" stroke="var(--accent-warm)" stroke-width="2"/>
-          </svg>
-        </div>
-        <dl>
-          <dt>Họ tên</dt><dd>Đỗ Minh Khoa</dd>
-          <dt>Ngành</dt><dd>Công nghệ thông tin</dd>
-          <dt>Trường</dt><dd>ĐH Bách Khoa Hà Nội</dd>
-          <dt>Sở thích</dt><dd>Lập trình game, đọc sách</dd>
-          <dt>Mục tiêu</dt><dd>Trở thành Front-end Dev</dd>
-        </dl>
+      <h3 class="stack-label reveal">Giới thiệu</h3>
+      <div class="info-block reveal">
+        <p>Tôi là Vũ Tùng An, sinh viên Công nghệ Thông tin với định hướng phát triển trong lĩnh vực Web Development. Tôi đang tập trung xây dựng nền tảng về HTML, CSS, JavaScript và từng bước phát triển kỹ năng thông qua các dự án cá nhân.</p>
       </div>
+
+      <h3 class="stack-label reveal">Kỹ năng</h3>
+      <div class="info-block reveal">
+        <p class="skill-inline">HTML • CSS • JavaScript • SQL • Git/GitHub</p>
+      </div>
+
+      <a href="#skills" data-link class="scroll-down reveal" aria-label="Cuộn xuống">↓</a>
     </div>
   </section>
 
