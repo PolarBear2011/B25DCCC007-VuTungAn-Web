@@ -278,3 +278,24 @@ body {
 .back-button:hover {
   background: #dbeafe;
 }
+
+.city-select {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1.1rem;
+  color: #1e293b;
+  background: #ffffff;
+  border: 2px solid #bfdbfe;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.city-select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px #93c5fd;
+}
+
+.city-select + .message {
+  margin-top: 12px;
+}

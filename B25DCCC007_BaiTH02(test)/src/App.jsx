@@ -37,6 +37,8 @@ const WEATHER_CODES = {
 };
 
 const DAY_NAMES = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
+const EMPTY = "???";
+const EMPTY_INFO = { icon: "❔", text: EMPTY };
 
 function getWeatherInfo(code) {
   return WEATHER_CODES[code] || { icon: "❓", text: "Không xác định" };
@@ -113,82 +115,18 @@ function App() {
     };
   }, [selectedCity]);
 
-  function handleSelectCity(city) {
-    setWeather(null);
-    setError("");
-    setLoading(true);
-    setSelectedCity(city);
-  }
-
-  function handleBack() {
-    setSelectedCity(null);
+  function handleChangeCity(event) {
+    const city = CITIES.find((item) => item.id === event.target.value);
     setWeather(null);
     setError("");
     setLoading(false);
+    setSelectedCity(city || null);
   }
 
-  function renderCurrentWeather() {
-    const current = weather.current;
-    const units = weather.current_units;
-    const info = getWeatherInfo(current.weather_code);
-
-    return (
-      <div className="current-card">
-        <h2>{selectedCity.name}</h2>
-        <div className="current-main">
-          <span className="current-icon">{info.icon}</span>
-          <span className="current-temp">
-            {Math.round(current.temperature_2m)}
-            {units.temperature_2m}
-          </span>
-        </div>
-        <p className="current-desc">{info.text}</p>
-        <div className="current-details">
-          <div className="detail-item">
-            <span className="detail-label">Độ ẩm</span>
-            <span className="detail-value">
-              {current.relative_humidity_2m} {units.relative_humidity_2m}
-            </span>
-          </div>
-          <div className="detail-item">
-            <span className="detail-label">Tốc độ gió</span>
-            <span className="detail-value">
-              {current.wind_speed_10m} {units.wind_speed_10m}
-            </span>
-          </div>
-          <div className="detail-item">
-            <span className="detail-label">Cập nhật lúc</span>
-            <span className="detail-value">{formatUpdateTime(current.time)}</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  function renderForecast() {
-    const daily = weather.daily;
-
-    return (
-      <div className="forecast-list">
-        {daily.time.map((dateString, index) => {
-          const info = getWeatherInfo(daily.weather_code[index]);
-          const day = formatDay(dateString);
-          return (
-            <div className="forecast-card" key={dateString}>
-              <div className="forecast-day">{day.dayName}</div>
-              <div className="forecast-date">{day.shortDate}</div>
-              <div className="forecast-icon">{info.icon}</div>
-              <div className="forecast-desc">{info.text}</div>
-              <div className="forecast-temp">
-                <span className="temp-max">{Math.round(daily.temperature_2m_max[index])}°</span>
-                <span className="temp-min">{Math.round(daily.temperature_2m_min[index])}°</span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
+  const current = weather ? weather.current : null;
+  const units = weather ? weather.current_units : null;
+  const currentInfo = current ? getWeatherInfo(current.weather_code) : EMPTY_INFO;
+  const forecastDays = weather ? weather.daily.time : Array.from({ length: 7 }, () => null);
 
   return (
     <div className="app">
@@ -197,49 +135,85 @@ function App() {
         <p>Dữ liệu từ Open-Meteo</p>
       </header>
 
-      {!selectedCity && (
-        <section className="section">
-          <h2 className="section-title">Chọn thành phố</h2>
-          <div className="city-list">
-            {CITIES.map((city) => {
-              let className = "city-card";
-              if (city.featured) className += " featured";
-              return (
-                <button
-                  key={city.id}
-                  className={className}
-                  onClick={() => handleSelectCity(city)}
-                >
-                  {city.featured && <span className="city-star">⭐ Nổi bật</span>}
-                  <span className="city-name">{city.name}</span>
-                </button>
-              );
-            })}
+      <section className="section">
+        <h2 className="section-title">Chọn thành phố</h2>
+        <select
+          className="city-select"
+          value={selectedCity ? selectedCity.id : ""}
+          onChange={handleChangeCity}
+        >
+          <option value=""></option>
+          {CITIES.map((city) => (
+            <option key={city.id} value={city.id}>
+              {city.featured ? "⭐ " : ""}
+              {city.name}
+            </option>
+          ))}
+        </select>
+        {loading && <p className="message">Đang tải dữ liệu thời tiết...</p>}
+        {error && <p className="message error">{error}</p>}
+      </section>
+
+      <section className="section">
+        <h2 className="section-title">Thời tiết hiện tại</h2>
+        <div className="current-card">
+          <h2>{selectedCity ? selectedCity.name : EMPTY}</h2>
+          <div className="current-main">
+            <span className="current-icon">{currentInfo.icon}</span>
+            <span className="current-temp">
+              {current ? Math.round(current.temperature_2m) + units.temperature_2m : EMPTY}
+            </span>
           </div>
-        </section>
-      )}
+          <p className="current-desc">{currentInfo.text}</p>
+          <div className="current-details">
+            <div className="detail-item">
+              <span className="detail-label">Độ ẩm</span>
+              <span className="detail-value">
+                {current ? `${current.relative_humidity_2m} ${units.relative_humidity_2m}` : EMPTY}
+              </span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-label">Tốc độ gió</span>
+              <span className="detail-value">
+                {current ? `${current.wind_speed_10m} ${units.wind_speed_10m}` : EMPTY}
+              </span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-label">Cập nhật lúc</span>
+              <span className="detail-value">
+                {current ? formatUpdateTime(current.time) : EMPTY}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      {selectedCity && (
-        <>
-          <button className="back-button" onClick={handleBack}>
-            ← Quay lại danh sách
-          </button>
-
-          <section className="section">
-            <h2 className="section-title">Thời tiết hiện tại</h2>
-            {loading && <p className="message">Đang tải dữ liệu thời tiết...</p>}
-            {!loading && error && <p className="message error">{error}</p>}
-            {!loading && !error && weather && renderCurrentWeather()}
-          </section>
-
-          <section className="section">
-            <h2 className="section-title">Dự báo 7 ngày</h2>
-            {loading && <p className="message">Đang tải dữ liệu dự báo...</p>}
-            {!loading && error && <p className="message error">Không có dữ liệu dự báo.</p>}
-            {!loading && !error && weather && renderForecast()}
-          </section>
-        </>
-      )}
+      <section className="section">
+        <h2 className="section-title">Dự báo 7 ngày</h2>
+        <div className="forecast-list">
+          {forecastDays.map((dateString, index) => {
+            const daily = weather ? weather.daily : null;
+            const info = daily ? getWeatherInfo(daily.weather_code[index]) : EMPTY_INFO;
+            const day = dateString ? formatDay(dateString) : { dayName: EMPTY, shortDate: EMPTY };
+            return (
+              <div className="forecast-card" key={dateString || index}>
+                <div className="forecast-day">{day.dayName}</div>
+                <div className="forecast-date">{day.shortDate}</div>
+                <div className="forecast-icon">{info.icon}</div>
+                <div className="forecast-desc">{info.text}</div>
+                <div className="forecast-temp">
+                  <span className="temp-max">
+                    {daily ? Math.round(daily.temperature_2m_max[index]) + "°" : EMPTY}
+                  </span>
+                  <span className="temp-min">
+                    {daily ? Math.round(daily.temperature_2m_min[index]) + "°" : EMPTY}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
     </div>
   );
 }
