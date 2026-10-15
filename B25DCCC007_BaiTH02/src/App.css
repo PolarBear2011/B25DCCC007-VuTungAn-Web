@@ -1,0 +1,264 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(180deg, #dbeafe 0%, #f0f9ff 100%);
+  color: #1e293b;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #1d4ed8;
+  letter-spacing: 1px;
+}
+
+.app-header p {
+  margin: 6px 0 0;
+  color: #64748b;
+}
+
+.section {
+  margin-bottom: 28px;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  margin: 0 0 12px;
+  color: #1e3a8a;
+}
+
+.city-list {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.city-card {
+  grid-column: span 2;
+  background: #ffffff;
+  border: 2px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 16px 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #1e293b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.city-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+}
+
+.city-card.featured {
+  grid-column: span 3;
+  background: linear-gradient(135deg, #f97316, #fb923c);
+  border-color: #ea580c;
+  color: #ffffff;
+  padding: 24px 8px;
+}
+
+.city-card.featured .city-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.city-star {
+  font-size: 0.8rem;
+}
+
+.city-card.selected {
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px #93c5fd;
+  background: #dbeafe;
+}
+
+.city-card.featured.selected {
+  background: linear-gradient(135deg, #ea580c, #f97316);
+  border-color: #1d4ed8;
+}
+
+.city-name {
+  font-weight: 600;
+}
+
+.message {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  color: #475569;
+}
+
+.message.error {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.current-card {
+  background: linear-gradient(135deg, #2563eb, #38bdf8);
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.current-card h2 {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+}
+
+.current-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.current-icon {
+  font-size: 4rem;
+}
+
+.current-temp {
+  font-size: 3.5rem;
+  font-weight: 700;
+}
+
+.current-desc {
+  font-size: 1.2rem;
+  margin: 4px 0 20px;
+}
+
+.current-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.detail-item {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.detail-value {
+  font-weight: 600;
+}
+
+.forecast-list {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+
+.forecast-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px 6px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.forecast-day {
+  font-weight: 700;
+  color: #1d4ed8;
+}
+
+.forecast-date {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.forecast-icon {
+  font-size: 2rem;
+  margin: 8px 0 4px;
+}
+
+.forecast-desc {
+  font-size: 0.8rem;
+  color: #475569;
+  min-height: 2.4em;
+}
+
+.forecast-temp {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.temp-max {
+  color: #dc2626;
+}
+
+.temp-min {
+  color: #2563eb;
+}
+
+@media (max-width: 900px) {
+  .forecast-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .app-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .city-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .city-card,
+  .city-card.featured {
+    grid-column: span 1;
+  }
+
+  .city-card.featured {
+    grid-column: span 2;
+  }
+
+  .current-temp {
+    font-size: 2.8rem;
+  }
+
+  .current-details {
+    grid-template-columns: 1fr;
+  }
+
+  .forecast-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
