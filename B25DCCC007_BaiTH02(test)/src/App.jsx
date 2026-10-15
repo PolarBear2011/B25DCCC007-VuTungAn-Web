@@ -37,8 +37,6 @@ const WEATHER_CODES = {
 };
 
 const DAY_NAMES = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
-const EMPTY = "???";
-const EMPTY_INFO = { icon: "❔", text: EMPTY };
 
 function getWeatherInfo(code) {
   return WEATHER_CODES[code] || { icon: "❓", text: "Không xác định" };
@@ -57,6 +55,10 @@ function formatDay(dateString) {
     dayName: DAY_NAMES[date.getDay()],
     shortDate: `${day}/${month}`,
   };
+}
+
+function Hidden({ round }) {
+  return <span className={round ? "hidden-bar round" : "hidden-bar"}></span>;
 }
 
 function App() {
@@ -125,7 +127,7 @@ function App() {
 
   const current = weather ? weather.current : null;
   const units = weather ? weather.current_units : null;
-  const currentInfo = current ? getWeatherInfo(current.weather_code) : EMPTY_INFO;
+  const currentInfo = current ? getWeatherInfo(current.weather_code) : null;
   const forecastDays = weather ? weather.daily.time : Array.from({ length: 7 }, () => null);
 
   return (
@@ -157,31 +159,33 @@ function App() {
       <section className="section">
         <h2 className="section-title">Thời tiết hiện tại</h2>
         <div className="current-card">
-          <h2>{selectedCity ? selectedCity.name : EMPTY}</h2>
+          <h2>{selectedCity ? selectedCity.name : <Hidden />}</h2>
           <div className="current-main">
-            <span className="current-icon">{currentInfo.icon}</span>
+            <span className="current-icon">
+              {currentInfo ? currentInfo.icon : <Hidden round />}
+            </span>
             <span className="current-temp">
-              {current ? Math.round(current.temperature_2m) + units.temperature_2m : EMPTY}
+              {current ? Math.round(current.temperature_2m) + units.temperature_2m : <Hidden />}
             </span>
           </div>
-          <p className="current-desc">{currentInfo.text}</p>
+          <p className="current-desc">{currentInfo ? currentInfo.text : <Hidden />}</p>
           <div className="current-details">
             <div className="detail-item">
               <span className="detail-label">Độ ẩm</span>
               <span className="detail-value">
-                {current ? `${current.relative_humidity_2m} ${units.relative_humidity_2m}` : EMPTY}
+                {current ? `${current.relative_humidity_2m} ${units.relative_humidity_2m}` : <Hidden />}
               </span>
             </div>
             <div className="detail-item">
               <span className="detail-label">Tốc độ gió</span>
               <span className="detail-value">
-                {current ? `${current.wind_speed_10m} ${units.wind_speed_10m}` : EMPTY}
+                {current ? `${current.wind_speed_10m} ${units.wind_speed_10m}` : <Hidden />}
               </span>
             </div>
             <div className="detail-item">
               <span className="detail-label">Cập nhật lúc</span>
               <span className="detail-value">
-                {current ? formatUpdateTime(current.time) : EMPTY}
+                {current ? formatUpdateTime(current.time) : <Hidden />}
               </span>
             </div>
           </div>
@@ -193,20 +197,20 @@ function App() {
         <div className="forecast-list">
           {forecastDays.map((dateString, index) => {
             const daily = weather ? weather.daily : null;
-            const info = daily ? getWeatherInfo(daily.weather_code[index]) : EMPTY_INFO;
-            const day = dateString ? formatDay(dateString) : { dayName: EMPTY, shortDate: EMPTY };
+            const info = daily ? getWeatherInfo(daily.weather_code[index]) : null;
+            const day = dateString ? formatDay(dateString) : null;
             return (
               <div className="forecast-card" key={dateString || index}>
-                <div className="forecast-day">{day.dayName}</div>
-                <div className="forecast-date">{day.shortDate}</div>
-                <div className="forecast-icon">{info.icon}</div>
-                <div className="forecast-desc">{info.text}</div>
+                <div className="forecast-day">{day ? day.dayName : <Hidden />}</div>
+                <div className="forecast-date">{day ? day.shortDate : <Hidden />}</div>
+                <div className="forecast-icon">{info ? info.icon : <Hidden round />}</div>
+                <div className="forecast-desc">{info ? info.text : <Hidden />}</div>
                 <div className="forecast-temp">
                   <span className="temp-max">
-                    {daily ? Math.round(daily.temperature_2m_max[index]) + "°" : EMPTY}
+                    {daily ? Math.round(daily.temperature_2m_max[index]) + "°" : <Hidden />}
                   </span>
                   <span className="temp-min">
-                    {daily ? Math.round(daily.temperature_2m_min[index]) + "°" : EMPTY}
+                    {daily ? Math.round(daily.temperature_2m_min[index]) + "°" : <Hidden />}
                   </span>
                 </div>
               </div>

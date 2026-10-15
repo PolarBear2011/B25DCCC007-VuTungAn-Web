@@ -299,3 +299,22 @@ body {
 .city-select + .message {
   margin-top: 12px;
 }
+
+.hidden-bar {
+  display: inline-block;
+  width: 3.5em;
+  height: 0.9em;
+  background: rgba(148, 163, 184, 0.45);
+  border-radius: 6px;
+  vertical-align: middle;
+}
+
+.hidden-bar.round {
+  width: 0.8em;
+  height: 0.8em;
+  border-radius: 50%;
+}
+
+.current-card .hidden-bar {
+  background: rgba(255, 255, 255, 0.35);
+}
