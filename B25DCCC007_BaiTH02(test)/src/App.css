@@ -262,3 +262,19 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.back-button {
+  background: #ffffff;
+  border: 2px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1d4ed8;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background: #dbeafe;
+}

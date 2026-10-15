@@ -58,12 +58,14 @@ function formatDay(dateString) {
 }
 
 function App() {
-  const [selectedCity, setSelectedCity] = useState(CITIES[0]);
+  const [selectedCity, setSelectedCity] = useState(null);
   const [weather, setWeather] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (!selectedCity) return;
+
     let ignore = false;
 
     async function fetchWeather() {
@@ -110,6 +112,20 @@ function App() {
       ignore = true;
     };
   }, [selectedCity]);
+
+  function handleSelectCity(city) {
+    setWeather(null);
+    setError("");
+    setLoading(true);
+    setSelectedCity(city);
+  }
+
+  function handleBack() {
+    setSelectedCity(null);
+    setWeather(null);
+    setError("");
+    setLoading(false);
+  }
 
   function renderCurrentWeather() {
     const current = weather.current;
@@ -181,40 +197,49 @@ function App() {
         <p>Dữ liệu từ Open-Meteo</p>
       </header>
 
-      <section className="section">
-        <h2 className="section-title">Chọn thành phố</h2>
-        <div className="city-list">
-          {CITIES.map((city) => {
-            let className = "city-card";
-            if (city.featured) className += " featured";
-            if (city.id === selectedCity.id) className += " selected";
-            return (
-              <button
-                key={city.id}
-                className={className}
-                onClick={() => setSelectedCity(city)}
-              >
-                {city.featured && <span className="city-star">⭐ Nổi bật</span>}
-                <span className="city-name">{city.name}</span>
-              </button>
-            );
-          })}
-        </div>
-      </section>
+      {!selectedCity && (
+        <section className="section">
+          <h2 className="section-title">Chọn thành phố</h2>
+          <div className="city-list">
+            {CITIES.map((city) => {
+              let className = "city-card";
+              if (city.featured) className += " featured";
+              return (
+                <button
+                  key={city.id}
+                  className={className}
+                  onClick={() => handleSelectCity(city)}
+                >
+                  {city.featured && <span className="city-star">⭐ Nổi bật</span>}
+                  <span className="city-name">{city.name}</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
-      <section className="section">
-        <h2 className="section-title">Thời tiết hiện tại</h2>
-        {loading && <p className="message">Đang tải dữ liệu thời tiết...</p>}
-        {!loading && error && <p className="message error">{error}</p>}
-        {!loading && !error && weather && renderCurrentWeather()}
-      </section>
+      {selectedCity && (
+        <>
+          <button className="back-button" onClick={handleBack}>
+            ← Quay lại danh sách
+          </button>
 
-      <section className="section">
-        <h2 className="section-title">Dự báo 7 ngày</h2>
-        {loading && <p className="message">Đang tải dữ liệu dự báo...</p>}
-        {!loading && error && <p className="message error">Không có dữ liệu dự báo.</p>}
-        {!loading && !error && weather && renderForecast()}
-      </section>
+          <section className="section">
+            <h2 className="section-title">Thời tiết hiện tại</h2>
+            {loading && <p className="message">Đang tải dữ liệu thời tiết...</p>}
+            {!loading && error && <p className="message error">{error}</p>}
+            {!loading && !error && weather && renderCurrentWeather()}
+          </section>
+
+          <section className="section">
+            <h2 className="section-title">Dự báo 7 ngày</h2>
+            {loading && <p className="message">Đang tải dữ liệu dự báo...</p>}
+            {!loading && error && <p className="message error">Không có dữ liệu dự báo.</p>}
+            {!loading && !error && weather && renderForecast()}
+          </section>
+        </>
+      )}
     </div>
   );
 }
