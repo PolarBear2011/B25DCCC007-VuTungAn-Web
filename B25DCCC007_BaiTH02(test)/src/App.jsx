@@ -12,34 +12,39 @@ const CITIES = [
   { id: "cantho", name: "Cần Thơ", latitude: 10.0452, longitude: 105.7469, featured: false },
 ];
 
+const ICON_URL = "https://openweathermap.org/img/wn/";
+
 const WEATHER_CODES = {
-  0: { icon: "☀️", text: "Trời quang" },
-  1: { icon: "🌤️", text: "Ít mây" },
-  2: { icon: "⛅", text: "Có mây" },
-  3: { icon: "☁️", text: "Nhiều mây" },
-  45: { icon: "🌫️", text: "Sương mù" },
-  48: { icon: "🌫️", text: "Sương mù" },
-  51: { icon: "🌦️", text: "Mưa phùn nhẹ" },
-  53: { icon: "🌦️", text: "Mưa phùn" },
-  55: { icon: "🌦️", text: "Mưa phùn dày" },
-  61: { icon: "🌧️", text: "Mưa nhẹ" },
-  63: { icon: "🌧️", text: "Mưa vừa" },
-  65: { icon: "🌧️", text: "Mưa to" },
-  71: { icon: "❄️", text: "Tuyết nhẹ" },
-  73: { icon: "❄️", text: "Tuyết vừa" },
-  75: { icon: "❄️", text: "Tuyết dày" },
-  80: { icon: "🌦️", text: "Mưa rào nhẹ" },
-  81: { icon: "🌧️", text: "Mưa rào" },
-  82: { icon: "🌧️", text: "Mưa rào mạnh" },
-  95: { icon: "⛈️", text: "Dông" },
-  96: { icon: "⛈️", text: "Dông kèm mưa đá" },
-  99: { icon: "⛈️", text: "Dông kèm mưa đá lớn" },
+  0: { icon: "01d", text: "Trời quang" },
+  1: { icon: "02d", text: "Ít mây" },
+  2: { icon: "03d", text: "Có mây" },
+  3: { icon: "04d", text: "Nhiều mây" },
+  45: { icon: "50d", text: "Sương mù" },
+  48: { icon: "50d", text: "Sương mù" },
+  51: { icon: "09d", text: "Mưa phùn nhẹ" },
+  53: { icon: "09d", text: "Mưa phùn" },
+  55: { icon: "09d", text: "Mưa phùn dày" },
+  61: { icon: "10d", text: "Mưa nhẹ" },
+  63: { icon: "10d", text: "Mưa vừa" },
+  65: { icon: "10d", text: "Mưa to" },
+  71: { icon: "13d", text: "Tuyết nhẹ" },
+  73: { icon: "13d", text: "Tuyết vừa" },
+  75: { icon: "13d", text: "Tuyết dày" },
+  80: { icon: "09d", text: "Mưa rào nhẹ" },
+  81: { icon: "09d", text: "Mưa rào" },
+  82: { icon: "09d", text: "Mưa rào mạnh" },
+  95: { icon: "11d", text: "Dông" },
+  96: { icon: "11d", text: "Dông kèm mưa đá" },
+  99: { icon: "11d", text: "Dông kèm mưa đá lớn" },
 };
 
-const DAY_NAMES = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
-
 function getWeatherInfo(code) {
-  return WEATHER_CODES[code] || { icon: "❓", text: "Không xác định" };
+  return WEATHER_CODES[code] || { icon: null, text: "Không xác định" };
+}
+
+function WeatherIcon({ code }) {
+  if (!code) return <span>❓</span>;
+  return <img className="weather-img" src={`${ICON_URL}${code}@2x.png`} alt="" />;
 }
 
 function formatUpdateTime(isoTime) {
@@ -133,8 +138,7 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>THỜI TIẾT VIỆT NAM</h1>
-        <p>Dữ liệu từ Open-Meteo</p>
+        <h1>THỜI TIẾT HÔM NAY</h1>
       </header>
 
       <section className="section">
@@ -162,7 +166,7 @@ function App() {
           <h2>{selectedCity ? selectedCity.name : <Hidden />}</h2>
           <div className="current-main">
             <span className="current-icon">
-              {currentInfo ? currentInfo.icon : <Hidden round />}
+              {currentInfo ? <WeatherIcon code={currentInfo.icon} /> : <Hidden round />}
             </span>
             <span className="current-temp">
               {current ? Math.round(current.temperature_2m) + units.temperature_2m : <Hidden />}
@@ -193,7 +197,7 @@ function App() {
       </section>
 
       <section className="section">
-        <h2 className="section-title">Dự báo 7 ngày</h2>
+        <h2 className="section-title">Dự báo thời tiết 7 ngày tiếp theo</h2>
         <div className="forecast-list">
           {forecastDays.map((dateString, index) => {
             const daily = weather ? weather.daily : null;
@@ -203,7 +207,7 @@ function App() {
               <div className="forecast-card" key={dateString || index}>
                 <div className="forecast-day">{day ? day.dayName : <Hidden />}</div>
                 <div className="forecast-date">{day ? day.shortDate : <Hidden />}</div>
-                <div className="forecast-icon">{info ? info.icon : <Hidden round />}</div>
+                <div className="forecast-icon">{info ? <WeatherIcon code={info.icon} /> : <Hidden round />}</div>
                 <div className="forecast-desc">{info ? info.text : <Hidden />}</div>
                 <div className="forecast-temp">
                   <span className="temp-max">
